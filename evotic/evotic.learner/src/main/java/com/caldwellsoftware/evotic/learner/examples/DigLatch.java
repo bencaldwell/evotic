@@ -7,6 +7,8 @@ package com.caldwellsoftware.evotic.learner.examples;
 
 import com.caldwellsoftware.evotic.learner.Learner;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,5 +20,10 @@ public class DigLatch {
         URL configURL = DigLatch.class.getResource("/com/caldwellsoftware/evotic/learner/examples/diglatch/config.xml");
         String[] learnerArgs = {configURL.toString()};
         Learner learner = new Learner(learnerArgs);
+        try {
+            learner.start();
+        } catch (Exception ex) {
+            Logger.getLogger(DigLatch.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
