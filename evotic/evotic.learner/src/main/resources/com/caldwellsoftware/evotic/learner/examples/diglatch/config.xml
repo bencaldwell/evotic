@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+  <PLCTRONCONF>
+    <OPCSERVER>
+     <URI>opc.tcp://127.0.0.1:49380</URI>
+    </OPCSERVER>
+    <CLOCK>
+        <!-- time unit is multiple of microseconds -->
+        <TIMEUNIT>1000</TIMEUNIT>
+        <!-- response limit is the delay [time units] before a write must be received, even though it contains unchanged values -->
+        <RESPONSELIMIT>5000</RESPONSELIMIT>
+        <!-- test limit is the total time [time units] the test is allowed to take -->
+        <TESTLIMIT>1000000</TESTLIMIT>
+    </CLOCK>
+    <!-- IUT input variables -->
+    <STIMPARMS channel="read">
+     <PARM name="IN">
+       <TAG>Channel1.Device1.IN</TAG>
+       <TYPE>boolean</TYPE>
+     </PARM>
+     <PARM name="RST">
+       <TAG>Channel1.Device1.RST</TAG>
+       <TYPE>boolean</TYPE>
+     </PARM>
+    </STIMPARMS>
+    
+        <!-- IUT output variables -->
+    <OBSPARMS channel="write">
+     <PARM name="OUT">
+       <TAG>Channel1.Device1.OUT</TAG>
+       <TYPE>boolean</TYPE>
+     </PARM>
+    </OBSPARMS>
+  </PLCTRONCONF>

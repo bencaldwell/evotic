@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// constants
+const int INPUTS = 2;
+const int OUTPUTS = 2;
+const int GENES_PER_OUTPUT = 2;
+
+// channels
+broadcast chan chIN[INPUTS][2];
+broadcast chan chVAR[OUTPUTS][GENES_PER_OUTPUT - 1][2];
+broadcast chan chOUT[OUTPUTS][2];
+
+// variables
+/*
+int[0,1] IN[INPUTS];
+int[0,1] OUT[OUTPUTS];
+int[0,1] VAR[OUTPUTS][GENES_PER_OUTPUT - 1];
+*/
+
+</declaration>
+	<template>
+		<name x="5" y="5">TON</name>
+		<parameter>broadcast chan &amp;in[2], broadcast chan &amp;out[2],  int delay</parameter>
+		<declaration>clock x;</declaration>
+		<location id="id0" x="-59" y="119">
+			<name x="-69" y="85">on_</name>
+			<committed/>
+		</location>
+		<location id="id1" x="178" y="110">
+			<name x="168" y="76">running</name>
+			<label kind="invariant" x="168" y="127">x&lt;=delay</label>
+		</location>
+		<location id="id2" x="0" y="229">
+			<name x="-10" y="195">on</name>
+		</location>
+		<location id="id3" x="0" y="-17">
+			<name x="-10" y="-51">off</name>
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-29" y="34">out[0]!</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id0"/>
+			<label kind="synchronisation" x="-29" y="157">in[0]?</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="68" y="-34">in[0]?</label>
+			<nail x="178" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="85" y="178">x&gt;=delay</label>
+			<label kind="synchronisation" x="18" y="152">out[1]!</label>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="76" y="0">in[1]?</label>
+			<label kind="assignment" x="93" y="25">x:=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>Env</name>
+		<declaration>clock x;</declaration>
+		<location id="id4" x="-161" y="0">
+			<committed/>
+		</location>
+		<location id="id5" x="0" y="127">
+			<committed/>
+		</location>
+		<location id="id6" x="178" y="0">
+			<committed/>
+		</location>
+		<location id="id7" x="0" y="-102">
+			<committed/>
+		</location>
+		<location id="id8" x="0" y="0">
+		</location>
+		<init ref="id8"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id8"/>
+			<nail x="-85" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-143" y="-17">chIN[1][1]!</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id8"/>
+			<nail x="-42" y="59"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="0" y="46">chIN[1][0]!</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id8"/>
+			<nail x="85" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="18" y="-17">chIN[0][1]!</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id8"/>
+			<nail x="25" y="-42"/>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="0" y="-68">chIN[0][0]!</label>
+		</transition>
+	</template>
+	<system>// gene declarations
+gen00 = TON(chIN[0], chVAR[0][0], 10000);
+gen01 = TON(chVAR[0][0], chOUT[0], 10000);
+
+gen10 = TON(chIN[1], chVAR[1][0], 10000);
+gen11 = TON(chVAR[1][0], chOUT[1], 10000);
+
+
+// List one or more processes to be composed into a system.
+system Env, gen00, gen01, gen10, gen11;
+
+</system>
+	<queries>
+		<query>
+			<formula>A[] gen01.on imply (gen00.on or gen00.on_)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+		<query>
+			<formula>A[] not( gen00.off and gen01.on)
+			</formula>
+			<comment>
+			</comment>
+		</query>
+	</queries>
+</nta>
