@@ -5,6 +5,9 @@
  */
 package com.caldwellsoftware.evotic.learner;
 
+import com.caldwellsoftware.evotic.learner.genes.TOff;
+import com.caldwellsoftware.evotic.learner.genes.TOn;
+import com.caldwellsoftware.evotic.learner.genes.Input;
 import com.caldwellsoftware.evotic.learner.examples.DigLatch;
 import java.net.URL;
 import org.apache.log4j.Logger;
@@ -24,6 +27,7 @@ import org.jgap.gp.impl.GPConfiguration;
 import org.jgap.gp.impl.GPGenotype;
 import org.jgap.gp.terminal.False;
 import org.jgap.gp.terminal.Terminal;
+import org.jgap.gp.terminal.True;
 import org.jgap.gp.terminal.Variable;
 import org.jgap.util.SystemKit;
 
@@ -75,29 +79,14 @@ public class Learner extends GPProblem {
         // ------------------------------------------------------
         // TODO: create new commands that map to uppaal templates
         // TODO: what happens with terminals in context of uppaal?
+        // Add command gene for each possible TA template
         CommandGene[][] nodeSets = { {
-            // We need a variable to feed in data (see fitness function).
-            // ----------------------------------------------------------
-            vx = Variable.create(conf, "X", CommandGene.IntegerClass),
-            // Define the terminals (here: numbers) to try:
-            // Easiest: Define two constants
-            // More challenging: Define a terminal that can be within -10 and 10
-            // new Constant(conf, CommandGene.IntegerClass, 0),
-            // new Constant(conf, CommandGene.IntegerClass, -8),
-            new Terminal(conf, CommandGene.IntegerClass,-10,10,true),
-            // Boolean operators to use.
-            // _------------------------
-            new GreaterThan(conf, CommandGene.IntegerClass),
-            new Or(conf),
-            new Equals(conf, CommandGene.IntegerClass),
-            // Define complex operator.
-            // ------------------------
-            new If(conf, CommandGene.BooleanClass),
-            // Boolean terminals to use (they do not appear in an optimal solution
-            // and make the task more challenging) --> Leave away if needed
-            // -------------------------------------------------------------------
-            // new True(conf, CommandGene.BooleanClass),
-            new False(conf, CommandGene.BooleanClass)
+            // TON - on delay timer
+            new TOn(conf), 
+            // TOFF - off delay timer
+            new TOff(conf),
+            // Input - inputs to the SUL (must be 0 arity to be considered a terminal)
+            new Input(conf, CommandGene.BooleanClass)
         }
         };
         // Initialize the GPGenotype.
@@ -165,36 +154,8 @@ public class Learner extends GPProblem {
     class SimpleFitnessFunction extends GPFitnessFunction {
         protected double evaluate(final IGPProgram ind) {
           int error = 0;
-          Object[] noargs = new Object[0];
-          int maxDepth = ind.getChromosome(0).getDepth(0);
-          if (maxDepth > 2) {
-            error += maxDepth - 2;
-          }
-          for (int i = -10; i < 10; i++) {
-            vx.set(new Integer(i));
-            boolean y;
-            if (i > 0) {
-              y = true;
-            }
-            else {
-              if (i != -8 && i != - 5) {
-                y = false;
-              }
-              else {
-                y = true;
-              }
-            }
-            try {
-              boolean result = ind.execute_boolean(0, noargs);
-              if (result != y) {
-                error += 10;
-              }
-            } catch (ArithmeticException ex) { // some illegal operation was executed.
-              System.out.println("x = " + i);
-              System.out.println(ind);
-              throw ex;
-            }
-          }
+          // TODO: evaulate complexity metric
+          // TODO: ioco check against SUL
           return error;
         }
     }
