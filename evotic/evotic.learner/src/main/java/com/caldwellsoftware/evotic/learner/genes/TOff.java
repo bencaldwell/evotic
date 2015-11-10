@@ -8,6 +8,7 @@ package com.caldwellsoftware.evotic.learner.genes;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.CommandGene;
 import org.jgap.gp.impl.GPConfiguration;
+import org.jgap.gp.impl.ProgramChromosome;
 import org.w3c.dom.Document;
 
 /**
@@ -34,5 +35,12 @@ public class TOff extends TaComponent {
     public void write(Document document) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public void execute_void(ProgramChromosome c, int n, Object[] args) {
+        super.execute_void(c, n, args); 
+        c.execute_void(n, 0, args);
+    }
+    
     
 }

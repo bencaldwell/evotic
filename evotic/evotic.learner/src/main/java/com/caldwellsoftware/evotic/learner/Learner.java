@@ -160,6 +160,7 @@ public class Learner extends GPProblem {
             try {
                 // TODO: create uppaal xml to represent the individual
                 TaSystem ta = new TaSystem();
+                ta.modify(ind);
                 ta.Write();
                 // TODO: ioco check against SUL
             } catch (Exception ex) {

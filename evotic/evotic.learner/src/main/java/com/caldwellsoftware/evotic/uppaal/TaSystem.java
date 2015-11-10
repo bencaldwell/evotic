@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,7 +25,9 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.jgap.gp.IGPProgram;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -89,4 +93,66 @@ public class TaSystem {
         }
     }
     
+    public void addBroadcastChan(String name) {
+        
+    }
+    
+    public void addVariableBool(String name) {
+        
+    }
+    
+    public void addTon(     String instanceNum, 
+                            String input,
+                            String output,
+                            int delay) {
+        // get the system declarations section
+        NodeList nodes = document.getElementsByTagName("system");
+        String text = nodes.item(0).getTextContent();
+        
+        // add the new TON instance
+        String instanceName = "ton" + instanceNum;
+        String instanceDecl = instanceName + " = TON(exec" + instanceNum + ", " + input + ", " + output + ", " + delay + ");" + System.lineSeparator();
+        text = instanceDecl + System.lineSeparator() + text;
+        
+        nodes.item(0).setTextContent(text);
+        
+        // include the new TON instance in the system declaration
+        addToSystem(instanceName);
+        
+    }
+    
+    /**
+     * Add an instance to the system declaration.
+     * This enables the instance in the TA system.
+     * @param instanceName 
+     */
+    public void addToSystem(String instanceName) {
+        
+        // get the system declarations section
+        NodeList nodes = document.getElementsByTagName("system");
+        String text = nodes.item(0).getTextContent();
+        
+        // find the "system ...;" line and append the new instance
+        Pattern pattern = Pattern.compile("^system.*$", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(text);
+        matcher.find();
+        String systemDecl = matcher.group();
+        systemDecl = systemDecl.replace(";", ", " + instanceName + ";");
+        text = matcher.replaceAll(systemDecl);
+        nodes.item(0).setTextContent(text);
+    }
+    
+    public void addToff(    String name, 
+                            String chan, 
+                            String input,
+                            String output,
+                            int delay) {
+        
+    }
+    
+    public void modify(IGPProgram ind) {
+        Object[] args = new Object[] {this};
+        ind.execute_void(0, args);
+        
+    }
 }
