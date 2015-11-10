@@ -5,6 +5,7 @@
  */
 package com.caldwellsoftware.evotic.learner.genes;
 
+import com.caldwellsoftware.evotic.uppaal.ITaTemplate;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.gp.CommandGene;
 import org.jgap.gp.impl.GPConfiguration;
@@ -16,7 +17,7 @@ import org.jgap.gp.impl.GPConfiguration;
  * Instances receive and send on 0 or more broadcast sync channels (arity).
  * @author bencaldwell
  */
-public abstract class TaComponent extends CommandGene {
+public abstract class TaComponent extends CommandGene implements ITaTemplate {
     
     public TaComponent( final GPConfiguration a_conf, 
                         final int a_arity, 

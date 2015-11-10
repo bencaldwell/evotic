@@ -9,7 +9,9 @@ import com.caldwellsoftware.evotic.learner.genes.TOff;
 import com.caldwellsoftware.evotic.learner.genes.TOn;
 import com.caldwellsoftware.evotic.learner.genes.Input;
 import com.caldwellsoftware.evotic.learner.examples.DigLatch;
+import com.caldwellsoftware.evotic.uppaal.TaSystem;
 import java.net.URL;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.jgap.InvalidConfigurationException;
 import org.jgap.event.GeneticEvent;
@@ -153,10 +155,18 @@ public class Learner extends GPProblem {
     
     class SimpleFitnessFunction extends GPFitnessFunction {
         protected double evaluate(final IGPProgram ind) {
-          int error = 0;
-          // TODO: evaulate complexity metric
-          // TODO: ioco check against SUL
-          return error;
+            int error = 0;
+            // TODO: evaulate complexity metric
+            try {
+                // TODO: create uppaal xml to represent the individual
+                TaSystem ta = new TaSystem();
+                ta.Write();
+                // TODO: ioco check against SUL
+            } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(Learner.class.getName()).log(Level.SEVERE, null, ex);
+            } finally { 
+                return error;
+            }
         }
     }
 }
