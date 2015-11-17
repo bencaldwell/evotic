@@ -111,8 +111,8 @@ public class TaSystem {
         
         // add the new TON instance
         String instanceName = "ton" + instanceNum;
-        String instanceDecl = instanceName + " = TON(exec" + instanceNum + ", " + input + ", " + output + ", " + delay + ");" + System.lineSeparator();
-        text = instanceDecl + System.lineSeparator() + text;
+        String instanceDecl = instanceName + " = TON(exec[" + instanceNum + "], " + input + ", " + output + ", " + delay + ");" + System.lineSeparator();
+        text = instanceDecl + text;
         
         nodes.item(0).setTextContent(text);
         
@@ -142,12 +142,24 @@ public class TaSystem {
         nodes.item(0).setTextContent(text);
     }
     
-    public void addToff(    String name, 
-                            String chan, 
+    public void addToff(    String instanceNum, 
                             String input,
                             String output,
                             int delay) {
         
+        // get the system declarations section
+        NodeList nodes = document.getElementsByTagName("system");
+        String text = nodes.item(0).getTextContent();
+        
+        // add the new TON instance
+        String instanceName = "toff" + instanceNum;
+        String instanceDecl = instanceName + " = TOFF(exec[" + instanceNum + "], " + input + ", " + output + ", " + delay + ");" + System.lineSeparator();
+        text = instanceDecl + text;
+        
+        nodes.item(0).setTextContent(text);
+        
+        // include the new TON instance in the system declaration
+        addToSystem(instanceName);
     }
     
     public void modify(IGPProgram ind) {

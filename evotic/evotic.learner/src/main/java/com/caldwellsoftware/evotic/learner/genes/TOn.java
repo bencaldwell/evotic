@@ -44,9 +44,12 @@ public class TOn extends TaComponent {
         super.execute_void(c, n, args); 
         c.execute_void(n, 0, args);
         TaSystem ta = (TaSystem)args[0];
-        ta.addTon(      String.format("%03d", n),
-                        null, 
-                        null, 
+        // TODO: determine which index should be used for uppal var array - e.g. just allow 10 vars per component?
+        int varIn = 10*n;
+        int varOut = 10*n + 1;
+        ta.addToff(      String.format("%03d", n),
+                        "var["+varIn+"]", 
+                        "var["+varOut+"]", 
                         1000); //TODO: create a delay integer terminal for timers?
     }
   
