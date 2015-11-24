@@ -16,8 +16,11 @@ import org.w3c.dom.Document;
  */
 public class Input extends TaComponent {
 
-    public Input(GPConfiguration a_conf, Class a_returnType) throws InvalidConfigurationException {
+    private String m_varName;
+    
+    public Input(GPConfiguration a_conf, Class a_returnType, String a_varName) throws InvalidConfigurationException {
         super(a_conf, 0, a_returnType);
+        m_varName = a_varName;
     }
 
     @Override

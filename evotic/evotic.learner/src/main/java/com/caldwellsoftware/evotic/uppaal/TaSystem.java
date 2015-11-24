@@ -162,6 +162,26 @@ public class TaSystem {
         addToSystem(instanceName);
     }
     
+    public void addAnd(    String instanceNum, 
+                            String input0,
+                            String input1,
+                            String output) {
+        
+        // get the system declarations section
+        NodeList nodes = document.getElementsByTagName("system");
+        String text = nodes.item(0).getTextContent();
+        
+        // add the new TON instance
+        String instanceName = "ton" + instanceNum;
+        String instanceDecl = instanceName + " = AND(exec[" + instanceNum + "], " + input0 + ", " + input1 + ", " + output +  ");" + System.lineSeparator();
+        text = instanceDecl + text;
+        
+        nodes.item(0).setTextContent(text);
+        
+        // include the new TON instance in the system declaration
+        addToSystem(instanceName);
+    }
+    
     public void modify(IGPProgram ind) {
         Object[] args = new Object[] {this};
         ind.execute_void(0, args);

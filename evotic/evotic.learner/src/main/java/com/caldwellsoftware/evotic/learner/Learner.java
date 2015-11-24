@@ -9,6 +9,7 @@ import com.caldwellsoftware.evotic.learner.genes.TOff;
 import com.caldwellsoftware.evotic.learner.genes.TOn;
 import com.caldwellsoftware.evotic.learner.genes.Input;
 import com.caldwellsoftware.evotic.learner.examples.DigLatch;
+import com.caldwellsoftware.evotic.learner.genes.And;
 import com.caldwellsoftware.evotic.uppaal.TaSystem;
 import java.net.URL;
 import java.util.logging.Level;
@@ -87,8 +88,11 @@ public class Learner extends GPProblem {
             new TOn(conf), 
             // TOFF - off delay timer
             new TOff(conf),
+            // And - and operator
+            new And(conf),
             // Input - inputs to the SUL (must be 0 arity to be considered a terminal)
-            new Input(conf, CommandGene.BooleanClass)
+            new Input(conf, CommandGene.BooleanClass, "IN"),
+            new Input(conf, CommandGene.BooleanClass, "RST")
         }
         };
         // Initialize the GPGenotype.
